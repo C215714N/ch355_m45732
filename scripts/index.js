@@ -2,7 +2,9 @@
     let d = document;
     let box = d.querySelector('#app .box');
     let table = d.querySelector('#app .table');
-    let start = d.querySelector('.start');
+    let btn = d.querySelector('.btn.open-menu');
+    let menu = d.querySelector('.menu');
+    let start = d.querySelector('.start-game');
 // Objetos Referencia
     let pieces = {
         stock: {
@@ -23,12 +25,20 @@
         tags: ['thead', 'tbody'],
         childs: ['th', 'tr']
     }
+    let current = [];
+// Funcion Alternar Clases
+    const toggle = (config) => {
+        if (config.target.classList.toggle(config.status)){
+            config.tag.classList.replace(config.list[0], config.list[1])
+        } else {
+            config.tag.classList.replace(config.list[1], config.list[0])
+        }
+    }
 // Funciones Arrastrar y Soltar
     const onDrag = (e) => {
         e.dataTransfer.setData('piece', e.target.id)
     }
     const onDragOver = (e) => {
-        e.stopPropagation();
         e.preventDefault();
         e.target.classList.add('dragover');
     }
@@ -40,6 +50,13 @@
         let piece = d.getElementById(dragged);
         e.target.appendChild(piece);
         e.target.classList.remove('dragover');
+    }
+// Funciones Click para mover
+    const clickDrag = (e) => {
+        current = e.target;
+    }
+    const clickDrop = (e) => {
+        e.target.appendChild(current);
     }
 // Bucle de creacion de Celdas
     const repeat = (total, tag, parent) => {
@@ -76,7 +93,8 @@
             draggable: true
         } )
         box.appendChild(img)
-        img.addEventListener('dragstart', (e) => onDrag(e))
+        img.addEventListener('click', (e) => clickDrag(e))
+        img.addEventListener('dragstart', (ev) => onDrag(ev))
     }
 // Creacion del Tablero de Ajedrez
     const getBoard = () => {
@@ -85,22 +103,26 @@
             rows.innerHTML = repeat(8, board.childs[i]);
             table.appendChild(rows);
         });
+        createBoard();
         eventListeners();
     }
-    const eventListeners = () => {
+    const createBoard = () => {
         // Asignacion de Encabezados de Tabla
         table.querySelectorAll('th').forEach((h,i) => {
             h.innerHTML = String.fromCharCode(i + 65)
-        });
+        } );
         // Creacion de Casillas por Filas
         table.querySelectorAll('tbody tr').forEach((r) => {
             r.innerHTML = repeat(8, 'td', r.id)
-        });
+        } );
+    }
+    const eventListeners = () => {
         // Asignacion de Eventos de Casillas 
         table.querySelectorAll('td').forEach((t) => {
             t.addEventListener( 'dragover', (e) => onDragOver(e) )
             t.addEventListener( 'dragleave', (e) => onDragLeave(e) )
             t.addEventListener( 'drop', (e) => onDrop(e) )
+            t.addEventListener( 'click', (e) => clickDrop(e))
         });
     }
 // Organizacion de Piezas en el Tablero
@@ -126,4 +148,19 @@
 // Renderizado
 getPieces();
 getBoard();
-start.addEventListener( 'click', setOrder )
+// Eventos Principales
+btn.addEventListener( 'click', (e) => toggle({
+    tag: e.target,
+    target: menu,
+    status: 'active',
+    list: ['open-menu','close-menu']
+} ) )
+start.addEventListener( 'click', (e) => {
+    setOrder();
+    toggle({
+        tag: e.target,
+        target: box,
+        status: 'empty',
+        list: ['start-game', 'end-game']
+    } )
+} )
