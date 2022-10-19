@@ -53,9 +53,11 @@
     }
 // Funciones Click para mover
     const clickDrag = (e) => {
+        e.stopPropagation();
         current = e.target;
     }
     const clickDrop = (e) => {
+        e.stopPropagation();
         e.target.appendChild(current);
     }
 // Bucle de creacion de Celdas
@@ -104,7 +106,8 @@
             table.appendChild(rows);
         });
         createBoard();
-        eventListeners();
+        eventListeners([box])
+        eventListeners(Array.from(table.querySelectorAll('td')));
     }
     const createBoard = () => {
         // Asignacion de Encabezados de Tabla
@@ -116,9 +119,9 @@
             r.innerHTML = repeat(8, 'td', r.id)
         } );
     }
-    const eventListeners = () => {
+    const eventListeners = (tags) => {
         // Asignacion de Eventos de Casillas 
-        table.querySelectorAll('td').forEach((t) => {
+        tags.forEach((t) => {
             t.addEventListener( 'dragover', (e) => onDragOver(e) )
             t.addEventListener( 'dragleave', (e) => onDragLeave(e) )
             t.addEventListener( 'drop', (e) => onDrop(e) )
