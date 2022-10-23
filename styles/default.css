@@ -47,19 +47,20 @@
         margin: 1rem auto;
         border-collapse: collapse;
         text-align: center;
+        color: #eee;
     }
     .table :is(
         th,
         td
     ){
-        border: 1px solid #333;
+        border: 1px solid var(--color);
         width: 3rem;
         height: 3rem;
     }
     .table tr:nth-child(even) td:nth-child(odd),
     .table tr:nth-child(odd) td:nth-child(even){
         color: #eee;
-        background-color: #333;
+        background-color: #eeea;
     }
     .table{
         counter-reset: row;
@@ -68,12 +69,38 @@
         content: counter(row);
         counter-increment: row;
         display: block;
-        border: 1px solid #333;
+        border: 1px solid var(--color);
         padding: 1rem;
+        font-weight: bold;
     }
     .dragover{
         background: linear-gradient(#eca8,#ecac );
         box-shadow: 0 0 .5rem #eca;
+    }
+/* Tableros Alternativos */
+    .table tr{
+        background-color: var(--color);
+    }
+    .blue tr{
+        --color: #248;
+    }
+    .red tr{
+        --color: #933;
+    }
+    .wood tr{
+        --color: #632;
+    }
+    .green tr{
+        --color: #284;
+    }
+    .dark tr{
+        --color: #333;
+    }
+    .gray tr{
+        --color: #666;
+    }
+    .light tr{
+        --color: #999;
     }
 /* Cajon de piezas */
     :is(
