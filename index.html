@@ -8,17 +8,19 @@
     <link rel="stylesheet" href="styles/default.css">
 </head>
 <body>
-    <nav>
+    <nav id="menu">
         <ul class="menu">
-            <li><a href="#board">Tablero</a></li>
+            <li class="active"><a href="#board">Tablero</a></li>
             <li><a href="#pieces">Piezas</a></li>
             <li><a href="#new_match">Nueva Partida</a></li>
             <li><a href="#continue">Continuar</a></li>
         </ul>
+        <button class="ctrl icon-prev">&lt;</button>
+        <button class="ctrl icon-next">&gt;</button>
     </nav>
     <main id="app">
         <!-- Tablero de Ajedrez -->
-        <table class="table gray">
+        <table class="table dark">
         </table>
         <!-- Cajon de piezas -->
         <section class="box">
