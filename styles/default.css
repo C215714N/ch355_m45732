@@ -3,12 +3,15 @@
         font-family: sans-serif;
         box-sizing: border-box;
         scroll-behavior: smooth;
-        transition: all .5s ease;
+        transition: all .25s ease;
     }
     body,
     main,
     .menu{
         margin: 0;
+    }
+    .menu{
+        padding: 0;
     }
     .menu{
         list-style: none;
@@ -27,6 +30,9 @@
         margin-left: auto;
         border-radius: .5rem;
         border: 1px solid #248;
+    }
+    .menu li.active{
+        text-shadow: 0 0 .5rem #eee;
     }
 /* Punto de Entrada */
     #app{
@@ -201,10 +207,7 @@
     content: '\00d7';
 }
 /* Menu de Navegacion */
-.menu{
-    display: grid;
-    justify-content: space-evenly;
-    align-content: space-evenly;
+#menu{
     position: fixed;
     top: 100%;
     left: 0;
@@ -215,26 +218,51 @@
     background: linear-gradient(#248, #124);
     opacity: 0;
 }
-.menu.active{
+.menu{
+    display: grid;
+    justify-content: space-evenly;
+    align-content: space-evenly;
+    height: 100%;
+}
+#menu.active{
     top: 0;
     opacity: .9;
 }
 .menu a{
     color: #ccc;
-    text-shadow: 0 0 .5rem #333;
     font-size: 1.2rem;
 }
 .menu a:hover{
     color: #eee;
 }
+.ctrl{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border: none;
+    padding: .5rem max(1rem, 2.5rem);
+    color: #eee;
+    background-color: transparent;
+    font-size: min(1.5rem, 5vw);
+    opacity: .3;
+}
+.ctrl:hover{
+    opacity: .7;
+}
+.ctrl.icon-prev{
+    left: 0;
+}
+.ctrl.icon-next{
+    right: 0;
+}
 /* Medium Devices - Tablets */
 @media screen and (min-width: 768px){
-    .menu{
+    #menu{
         top: 0;
         left: -100%;
         max-width: 25rem;
     }
-    .menu.active{
+    #menu.active{
         left: 0;
     }
 }
