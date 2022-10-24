@@ -1,10 +1,12 @@
 // Variables Globales
     let d = document;
+    let className = 'active';
     let box = d.querySelector('#app .box');
     let table = d.querySelector('#app .table');
     let btn = d.querySelector('.btn.open-menu');
-    let menu = d.querySelector('.menu');
+    let menu = d.querySelector('#menu');
     let start = d.querySelector('.start-game');
+    let control = d.querySelectorAll('.ctrl');
 // Objetos Referencia
     let pieces = {
         stock: {
@@ -20,12 +22,12 @@
             ...pieces.stock.r_1.map(p => p + 0),
             ...pieces.stock.r_2.reverse().map(p => p + 1)
         ].concat(),
-        position: ['A','H'],
-        pawns: ['B','G'],
+        position: ['1','8'],
+        pawns: ['2','7'],
         tags: ['thead', 'tbody'],
         childs: ['th', 'tr']
     }
-    let current = [];
+    let current = ''
 // Funcion Alternar Clases
     const toggle = (config) => {
         if (config.target.classList.toggle(config.status)){
@@ -33,6 +35,31 @@
         } else {
             config.tag.classList.replace(config.list[1], config.list[0])
         }
+    }
+    const getItem = (array) => {
+    for (let i of array){
+        if(i.classList.contains(className)){
+            i.classList.remove(className);
+            return i;
+    } } }
+    const changeItem = (array,type) =>{
+    let item = getItem(array);
+    if (type == 'next') {
+        item = item.nextElementSibling || item.parentNode.firstElementChild
+    } 
+    else if (type == 'prev'){
+        item = item.previousElementSibling || item.parentNode.lastElementChild
+    } 
+    else {
+        item = array[type]
+    }   
+    item.classList.add(className)
+}
+    const changeColors = () => {
+        let list = menu.querySelectorAll('li');
+        list.forEach( (li,i) => li.addEventListener('click', () => {
+            getItem(list, i);
+        } ) )
     }
 // Funciones Arrastrar y Soltar
     const onDrag = (e) => {
@@ -58,16 +85,20 @@
     }
     const clickDrop = (e) => {
         e.stopPropagation();
-        e.target.appendChild(current);
+        if (current) {
+            e.target.appendChild(current)
+            current = '';
+        }
     }
 // Bucle de creacion de Celdas
     const repeat = (total, tag, parent) => {
         let data = '';
         for(let i = 0; i < total; i++){
-            data+=`<${tag} id="${tag == 'tr' ? 
-                String.fromCharCode(i + 65) : 
-                parent ? parent + parseInt(i + 1) : parseInt(i + 1)}">
-            </${tag}>`
+        data+=`<${tag} id="${tag == 'tr' ? 
+            parseInt(i + 1) :
+            parent ? String.fromCharCode(i + 65) + parent : 
+            String.fromCharCode(i + 65) }">
+        </${tag}>`
         }
         return data;
     }
@@ -80,23 +111,23 @@
             let stock = piece.split('_')[1];
             // Creacion de Piezas por Tipo
             for(let i = 0; i < stock; i ++){
-                let color = pieces['colors']
-                color.forEach( (c) => addPiece(c,p,i) ) 
+                let color = pieces['colors'];
+                color.forEach( (c) => addPiece(c,p,i) );
             } } ) 
         } );    
     }
     const addPiece = (color, piece, index) => {
-        let img = document.createElement('img');
-        // Asignacion de Atributos
-        Object.assign(img, {
-            src: `assets/${color}${piece}.svg`,
-            id: `${color}${piece}${index}`,
-            alt: `${color}${piece}`,
-            draggable: true
-        } )
-        box.appendChild(img)
-        img.addEventListener('click', (e) => clickDrag(e))
-        img.addEventListener('dragstart', (ev) => onDrag(ev))
+    let img = document.createElement('img');
+    // Asignacion de Atributos
+    Object.assign(img, {
+        src: `assets/${color}${piece}.svg`,
+        id: `${color}${piece}${index}`,
+        alt: `${color}${piece}`,
+        draggable: true
+    } )
+    box.appendChild(img);
+    img.addEventListener('click', (e) => clickDrag(e));
+    img.addEventListener('dragstart', (e) => onDrag(e));
     }
 // Creacion del Tablero de Ajedrez
     const getBoard = () => {
@@ -106,64 +137,73 @@
             table.appendChild(rows);
         });
         createBoard();
-        eventListeners([box])
-        eventListeners(Array.from(table.querySelectorAll('td')));
+        eventListeners([box]);
+        eventListeners([table]);
     }
     const createBoard = () => {
-        // Asignacion de Encabezados de Tabla
-        table.querySelectorAll('th').forEach((h,i) => {
-            h.innerHTML = String.fromCharCode(i + 65)
-        } );
-        // Creacion de Casillas por Filas
-        table.querySelectorAll('tbody tr').forEach((r) => {
-            r.innerHTML = repeat(8, 'td', r.id)
-        } );
+    // Asignacion de Encabezados de Tabla
+    table.querySelectorAll('th').forEach((h,i) => {
+        h.innerHTML = String.fromCharCode(i + 65)
+    } );
+    // Creacion de Casillas por Filas
+    table.querySelectorAll('tbody tr').forEach((r) => {
+        r.innerHTML = repeat(8, 'td', r.id)
+    } );
     }
     const eventListeners = (tags) => {
-        // Asignacion de Eventos de Casillas 
-        tags.forEach((t) => {
-            t.addEventListener( 'dragover', (e) => onDragOver(e) )
-            t.addEventListener( 'dragleave', (e) => onDragLeave(e) )
-            t.addEventListener( 'drop', (e) => onDrop(e) )
-            t.addEventListener( 'click', (e) => clickDrop(e))
-        });
+    // Asignacion de Eventos de Casillas 
+    tags.forEach((t) => {
+        t.addEventListener( 'dragover', (e) => onDragOver(e) )
+        t.addEventListener( 'dragleave', (e) => onDragLeave(e) )
+        t.addEventListener( 'drop', (e) => onDrop(e) )
+        t.addEventListener( 'click', (e) => clickDrop(e) )
+    } );
     }
 // Organizacion de Piezas en el Tablero
     const setOrder = () => {
-        board.position.forEach( ( p, i ) => {
-            let color = pieces.colors[i];
-            let pawns = board.pawns[i];
-            board.pieces.forEach((piece,i) => 
-                setPosition({
-                    color: color,
-                    piece: piece,
-                    cells: [ p, pawns ],
-                    index: i
-            } ) );
+    board.position.forEach( ( p, i ) => {
+        let color = pieces.colors[i];
+        let pawns = board.pawns[i];
+        board.pieces.forEach((piece,i) => 
+        setPosition( {
+            color: color,
+            piece: piece,
+            cells: [p, pawns],
+            index: i
+        } ) );
         } );
     }
     const setPosition = (config) => {
-        for (let [i, tag] of [config.piece,`p${config.index}`].entries()){
-            let img = d.getElementById(`${config.color}${tag}`)
-            let cell = d.getElementById(`${config.cells[i]}${config.index + 1}`)
-            cell.append(img);
+    for (let [i, tag] of [config.piece,`p${config.index}`].entries()){
+        let img = d.getElementById(`${config.color}${tag}`)
+        let cell = d.getElementById(String.fromCharCode(config.index + 65) + config.cells[i])
+        cell.append(img);
     } }
+// Colores Alternativos
 // Renderizado
 getPieces();
 getBoard();
+changeColors();
 // Eventos Principales
-btn.addEventListener( 'click', (e) => toggle({
+btn.addEventListener( 'click', (e) => { 
+toggle( {
     tag: e.target,
     target: menu,
     status: 'active',
     list: ['open-menu','close-menu']
+} ) } )
+control.forEach( btn => btn.addEventListener( 'click', (e) => {
+    e.stopPropagation();
+    let i = e.target.className.split('-')[1];
+    let item = menu.querySelectorAll('li')
+    changeItem(item, i);
 } ) )
-start.addEventListener( 'click', (e) => {
-    setOrder();
-    toggle({
+start.addEventListener( 'click', (e) => { 
+    toggle( {
         tag: e.target,
         target: box,
         status: 'empty',
         list: ['start-game', 'end-game']
     } )
+    setOrder();
 } )
