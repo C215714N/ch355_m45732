@@ -1,6 +1,4 @@
-import {
-    className
-} from "../models/declarations.js";
+import { className } from "../models/declarations.js";
 // Funcion Alternar Clases
 export const toggle = (config) => {
     if (config.target.classList.toggle(config.status)){
