@@ -23,6 +23,10 @@
     ) a {
         text-decoration: none;
     }
+    body{
+        background: #8648 url('../assets/background.jpg') center/cover;
+        background-blend-mode: lighten;
+    }
     .table.cover{
         flex-basis: 100%;
     }
