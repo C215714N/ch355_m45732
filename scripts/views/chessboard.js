@@ -1,4 +1,4 @@
-import { box, table } from '../models/declarations.js';
+import { box, table } from '../models/selectors.js';
 import { createBoard } from './rows.js';
 import { eventListeners } from '../controllers/listeners.js';
 

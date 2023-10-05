@@ -1,5 +1,6 @@
-import { box } from '../models/declarations.js';
-import { clickDrag, onDrag } from "../controllers/movements.js";
+import { box } from '../models/selectors.js';
+import { onDrag } from '../controllers/events/dragndrop.js';
+import { clickDrag } from '../controllers/events/click.js';
 
 export const addPiece = (color, piece, index) => {
     let img = document.createElement('img');
@@ -10,7 +11,7 @@ export const addPiece = (color, piece, index) => {
         alt: `${color}${piece}`,
         draggable: true
     } )
-    box.appendChild(img);
-    img.addEventListener('click', (e) => clickDrag(e));
-    img.addEventListener('dragstart', (e) => onDrag(e));
+    box.append(img);
+    img.onclick = (e) => clickDrag(e);
+    img.ondragstart = (e) => onDrag(e);
 }
