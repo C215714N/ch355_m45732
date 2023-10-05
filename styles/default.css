@@ -1,6 +1,7 @@
 /* Reglas Generales */
     *{
         font-family: sans-serif;
+        user-select: none;
         box-sizing: border-box;
         scroll-behavior: smooth;
         transition: all .25s ease;
@@ -236,6 +237,7 @@
     color: #ccc;
     font-size: 1.2rem;
 }
+.menu li.active a,
 .menu a:hover{
     color: #eee;
 }
