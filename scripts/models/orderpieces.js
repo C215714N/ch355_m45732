@@ -1,24 +1,17 @@
-import { d } from "./declarations.js";
-import { board, pieces } from "./objects.js";
+import { d } from './global.js';
+import { board, pieces } from './objects.js';
 // Organizacion de Piezas en el Tablero
-
-const setPosition = (config) => {
-for (let [i, tag] of [config.piece,`p${config.index}`].entries()){
-    let img = d.getElementById(`${config.color}${tag}`)
-    let cell = d.getElementById(String.fromCharCode(config.index + 65) + config.cells[i])
+const setPosition = ({ piece, index, color, cells }) => {
+for (let [i, tag] of [piece,`p${index}`].entries()){
+    const img = d.getElementById(`${color}${tag}`)
+    const cell = d.getElementById(String.fromCharCode(index + 65) + cells[i])
     cell.append(img);
 } }
-
-export const setOrder = () => {
-    board.position.forEach( ( p, i ) => {
-        let color = pieces.colors[i];
-        let pawns = board.pawns[i];
-        board.pieces.forEach((piece,i) => 
-        setPosition( {
-            color: color,
-            piece: piece,
-            cells: [p, pawns],
-            index: i
-        } ) );
-        } );
-    }
+export const setOrder = () => board.position.map((p, i) => {
+    const color = pieces.colors[i]
+    const pawns = board.pawns[i]
+    board.pieces.map((piece, index) => setPosition( {
+        color, piece, index,
+        cells: [p, pawns]
+    } ) ) 
+} )
