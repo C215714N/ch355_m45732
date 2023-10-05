@@ -2,15 +2,13 @@ import {
     onDragOver,
     onDragLeave,
     onDrop,
-    clickDrop
-} from "../controllers/movements.js";
-
+} from "./events/dragndrop.js";
+import { clickDrop } from "./events/click.js";
+// Asignacion de Eventos de Casillas 
 export const eventListeners = (tags) => {
-    // Asignacion de Eventos de Casillas 
-    tags.forEach((t) => {
-        t.addEventListener( 'dragover', (e) => onDragOver(e) )
-        t.addEventListener( 'dragleave', (e) => onDragLeave(e) )
-        t.addEventListener( 'drop', (e) => onDrop(e) )
-        t.addEventListener( 'click', (e) => clickDrop(e) )
-    } );
-}
+tags.map((t) => {
+    t.ondragover = (e) => onDragOver(e)
+    t.ondragleave = (e) => onDragLeave(e)
+    t.ondrop = (e) => onDrop(e)
+    t.onclick = (e) => clickDrop(e)
+} ) }
